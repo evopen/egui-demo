@@ -1,0 +1,48 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'egui-demo'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=egui-demo",
+                    "--package=egui-demo"
+                ],
+                "filter": {
+                    "name": "egui-demo",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "env": {
+                "RUST_LOG": "egui_demo"
+            },
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'egui-demo'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=egui-demo",
+                    "--package=egui-demo"
+                ],
+                "filter": {
+                    "name": "egui-demo",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
