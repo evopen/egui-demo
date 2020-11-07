@@ -65,8 +65,41 @@ impl Engine {
         }
     }
 
+    fn resize(&mut self, new_size: &winit::dpi::PhysicalSize<u32>) {
+        self.size.clone_from(new_size);
+        self.swap_chain_desc.width = self.size.width;
+        self.swap_chain_desc.height = self.size.height;
+        self.swap_chain = self.device.create_swap_chain(&self.surface, &self.swap_chain_desc);
+        info!("swap chain resized to {}, {}", self.size.width, self.size.height);
+    }
+
     fn input(&mut self, event: &winit::event::WindowEvent) {
         self.ui_instance.input(event);
+        match event {
+            winit::event::WindowEvent::Resized(new_inner_size) => {
+                self.resize(new_inner_size);
+            }
+            winit::event::WindowEvent::Moved(_) => {}
+            winit::event::WindowEvent::CloseRequested => {}
+            winit::event::WindowEvent::Destroyed => {}
+            winit::event::WindowEvent::DroppedFile(_) => {}
+            winit::event::WindowEvent::HoveredFile(_) => {}
+            winit::event::WindowEvent::HoveredFileCancelled => {}
+            winit::event::WindowEvent::ReceivedCharacter(_) => {}
+            winit::event::WindowEvent::Focused(_) => {}
+            winit::event::WindowEvent::KeyboardInput { device_id, input, is_synthetic } => {}
+            winit::event::WindowEvent::ModifiersChanged(_) => {}
+            winit::event::WindowEvent::CursorMoved { device_id, position, modifiers } => {}
+            winit::event::WindowEvent::CursorEntered { device_id } => {}
+            winit::event::WindowEvent::CursorLeft { device_id } => {}
+            winit::event::WindowEvent::MouseWheel { device_id, delta, phase, modifiers } => {}
+            winit::event::WindowEvent::MouseInput { device_id, state, button, modifiers } => {}
+            winit::event::WindowEvent::TouchpadPressure { device_id, pressure, stage } => {}
+            winit::event::WindowEvent::AxisMotion { device_id, axis, value } => {}
+            winit::event::WindowEvent::Touch(_) => {}
+            winit::event::WindowEvent::ScaleFactorChanged { scale_factor, new_inner_size } => {}
+            winit::event::WindowEvent::ThemeChanged(_) => {}
+        }
     }
 
     fn draw_ui(&mut self) {
@@ -132,7 +165,7 @@ fn main() {
         .build(&event_loop)
         .unwrap();
 
-    let mut engine = async_std::task::block_on(Engine::new(&window));
+    let mut engine = futures::executor::block_on(Engine::new(&window));
 
     log::info!("initialized, took {} ms", time.elapsed().as_millis());
     drop(time);
