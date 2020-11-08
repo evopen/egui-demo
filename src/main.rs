@@ -141,6 +141,13 @@ impl Engine {
         self.ui_instance.begin_frame();
         egui::CentralPanel::default().show(self.ui_instance.context(), |ui| {
             ui.button("1234567890");
+            ui.button("numerous");
+            ui.button("1234567890");
+        });
+        egui::Window::new("hello").show(self.ui_instance.context(), |ui| {
+            if ui.button("fuckyou").clicked {
+                println!("this");
+            }
         });
 
         self.ui_instance.end_frame();
@@ -155,7 +162,11 @@ impl Engine {
             egui::Vec2::new(self.size.width as f32, self.size.height as f32),
             self.ui_instance.paint_jobs(),
         );
-        self.ui_render_pass.upload_texture(&self.device, &self.queue, self.ui_instance.context().texture());
+        self.ui_render_pass.upload_texture(
+            &self.device,
+            &self.queue,
+            self.ui_instance.context().texture(),
+        );
     }
 
     fn render(&mut self) {
