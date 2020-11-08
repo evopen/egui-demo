@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\egui-winit"
+		},
+		{
+			"path": "..\\egui-wgpu"
+		}
+	],
+	"settings": {}
+}

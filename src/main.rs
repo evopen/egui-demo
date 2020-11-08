@@ -8,7 +8,7 @@ struct Engine {
     swap_chain_desc: wgpu::SwapChainDescriptor,
     swap_chain: wgpu::SwapChain,
     ui_instance: egui_winit::Instance,
-    ui_render_pass: egui_wgpu_backend::RenderPass,
+    ui_render_pass: egui_wgpu::RenderPass,
     scale_factor: f64,
 }
 
@@ -48,7 +48,7 @@ impl Engine {
         let swap_chain = device.create_swap_chain(&surface, &swap_chain_desc);
 
         let ui_instance = egui_winit::Instance::new(size, window.scale_factor());
-        let ui_render_pass = egui_wgpu_backend::RenderPass::new(&device, swap_chain_desc.format);
+        let ui_render_pass = egui_wgpu::RenderPass::new(&device, swap_chain_desc.format);
 
         let scale_factor = window.scale_factor();
 
@@ -138,31 +138,24 @@ impl Engine {
     }
 
     fn draw_ui(&mut self) {
-        let mut ui = self.ui_instance.begin_frame();
-        if ui.button("hello").clicked {
-            println!("helloooo");
-        }
+        self.ui_instance.begin_frame();
+        egui::CentralPanel::default().show(self.ui_instance.context(), |ui| {
+            ui.button("1234567890");
+        });
+
         self.ui_instance.end_frame();
     }
 
     fn update(&mut self) {
         self.ui_instance.update_time();
         self.draw_ui();
-        self.ui_render_pass.update_texture(
-            &self.device,
-            &self.queue,
-            &self.ui_instance.context().texture(),
-        );
-        self.ui_render_pass.update_buffers(
+        self.ui_render_pass.upload_buffers(
             &mut self.device,
             &mut self.queue,
+            egui::Vec2::new(self.size.width as f32, self.size.height as f32),
             self.ui_instance.paint_jobs(),
-            &egui_wgpu_backend::ScreenDescriptor {
-                physical_width: self.size.width,
-                physical_height: self.size.height,
-                scale_factor: self.scale_factor as f32,
-            },
         );
+        self.ui_render_pass.upload_texture(&self.device, &self.queue, self.ui_instance.context().texture());
     }
 
     fn render(&mut self) {
@@ -172,17 +165,8 @@ impl Engine {
             .create_command_encoder(&wgpu::CommandEncoderDescriptor {
                 label: Some("Main Encoder"),
             });
-        self.ui_render_pass.execute(
-            &mut encoder,
-            &frame.view,
-            self.ui_instance.paint_jobs(),
-            &egui_wgpu_backend::ScreenDescriptor {
-                physical_width: self.size.width,
-                physical_height: self.size.height,
-                scale_factor: self.scale_factor as f32,
-            },
-            Some(wgpu::Color::BLUE),
-        );
+        self.ui_render_pass
+            .encode(&mut encoder, &frame.view, Some(wgpu::Color::BLUE));
         self.queue.submit(std::iter::once(encoder.finish()));
     }
 }

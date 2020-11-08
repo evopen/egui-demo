@@ -10,12 +10,12 @@ edition = "2018"
 winit = "0.23.0"
 wgpu = "0.6.0"
 image = "0.23.11"
-egui = "0.2.0"
+egui = "0.3.0"
 env_logger = "0.8.1"
 log = "0.4.11"
 futures = "0.3.7"
 egui-winit = { path = "../egui-winit" }
-egui_wgpu_backend = "0.1.1"
+egui-wgpu = { path = "../egui-wgpu" }
 
 [profile.dev]
 lto = false
