@@ -3,5 +3,6 @@ linker = "rust-lld"
 
 [build]
 rustflags = [
-    "-C", "link-arg=-fuse-ld=lld"
+    "-C", "link-arg=-fuse-ld=lld",
+    "-C", "embed-bitcode=no"
 ]

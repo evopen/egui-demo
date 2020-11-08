@@ -1,4 +1,4 @@
-use log::{debug, error, info, log_enabled, Level};
+#![allow(unused)]
 
 struct Engine {
     size: winit::dpi::PhysicalSize<u32>,
@@ -69,8 +69,14 @@ impl Engine {
         self.size.clone_from(new_size);
         self.swap_chain_desc.width = self.size.width;
         self.swap_chain_desc.height = self.size.height;
-        self.swap_chain = self.device.create_swap_chain(&self.surface, &self.swap_chain_desc);
-        info!("swap chain resized to {}, {}", self.size.width, self.size.height);
+        self.swap_chain = self
+            .device
+            .create_swap_chain(&self.surface, &self.swap_chain_desc);
+        log::info!(
+            "swap chain resized to {}, {}",
+            self.size.width,
+            self.size.height
+        );
     }
 
     fn input(&mut self, event: &winit::event::WindowEvent) {
@@ -87,17 +93,46 @@ impl Engine {
             winit::event::WindowEvent::HoveredFileCancelled => {}
             winit::event::WindowEvent::ReceivedCharacter(_) => {}
             winit::event::WindowEvent::Focused(_) => {}
-            winit::event::WindowEvent::KeyboardInput { device_id, input, is_synthetic } => {}
+            winit::event::WindowEvent::KeyboardInput {
+                device_id,
+                input,
+                is_synthetic,
+            } => {}
             winit::event::WindowEvent::ModifiersChanged(_) => {}
-            winit::event::WindowEvent::CursorMoved { device_id, position, modifiers } => {}
+            winit::event::WindowEvent::CursorMoved {
+                device_id,
+                position,
+                ..
+            } => {}
             winit::event::WindowEvent::CursorEntered { device_id } => {}
             winit::event::WindowEvent::CursorLeft { device_id } => {}
-            winit::event::WindowEvent::MouseWheel { device_id, delta, phase, modifiers } => {}
-            winit::event::WindowEvent::MouseInput { device_id, state, button, modifiers } => {}
-            winit::event::WindowEvent::TouchpadPressure { device_id, pressure, stage } => {}
-            winit::event::WindowEvent::AxisMotion { device_id, axis, value } => {}
+            winit::event::WindowEvent::MouseWheel {
+                device_id,
+                delta,
+                phase,
+                ..
+            } => {}
+            winit::event::WindowEvent::MouseInput {
+                device_id,
+                state,
+                button,
+                ..
+            } => {}
+            winit::event::WindowEvent::TouchpadPressure {
+                device_id,
+                pressure,
+                stage,
+            } => {}
+            winit::event::WindowEvent::AxisMotion {
+                device_id,
+                axis,
+                value,
+            } => {}
             winit::event::WindowEvent::Touch(_) => {}
-            winit::event::WindowEvent::ScaleFactorChanged { scale_factor, new_inner_size } => {}
+            winit::event::WindowEvent::ScaleFactorChanged {
+                scale_factor,
+                new_inner_size,
+            } => {}
             winit::event::WindowEvent::ThemeChanged(_) => {}
         }
     }
@@ -155,7 +190,7 @@ impl Engine {
 fn main() {
     env_logger::builder().format_timestamp(None).init();
 
-    info!("initializing");
+    log::info!("initializing");
     let time = std::time::Instant::now();
 
     let event_loop = winit::event_loop::EventLoop::new();
